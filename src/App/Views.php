@@ -48,13 +48,25 @@ HTML;
 
     public function card(Card $card, string $today): string
     {
-        $out = $this->header('Identity card');
-        $out .= '<h1>' . $this->h($card->identity->name) . '</h1>' . "\n";
+        $out = $this->header('InDX Identity Card');
+        $out .= '<h1>' . $this->h('InDX Identity Card') . '</h1>' . "\n";
+        $out .= '<p class="lede">' . $this->h('InDX stands for Interstitial Document Extended. It gives each person a digital card that connects their identity to accounts, documents, contact details and social profiles elsewhere. A short link opens the card. The holder controls its contents, publishes selected documents for download and grants named verifiers access to specific information for a defined period.') . '</p>' . "\n";
         $out .= '<p class="holder">' . $this->h($card->identity->holder)
             . ' · born ' . $this->h($card->identity->bornOn)
             . ' · ' . $card->identity->age($today) . ' years old</p>' . "\n";
 
-        $out .= '<h2>The card holds</h2>' . "\n";
+        $out .= '<h2>Six Parts of the Card</h2>' . "\n" . '<ul class="parts">' . "\n";
+        foreach ([
+            ['Verified photograph', 'A verified photograph establishes the holder\'s appearance.'],
+            ['Personal documents', 'Holder-selected documents remain available for download through the card.'],
+            ['Validated contacts', 'Verified email, telephone and postal address, supported by proof of address.'],
+            ['Social profiles', 'A list of social profiles and external links, like a link page.'],
+            ['Financial information', 'Credit score with source and reading date, plus bank coordinates supported by proof of funds.'],
+            ['Access grants', 'Named permissions give specific verifiers access to defined card sections for a limited period.'],
+        ] as [$partName, $partLine]) {
+            $out .= '<li><strong>' . $this->h($partName) . '</strong> ' . $this->h($partLine) . '</li>' . "\n";
+        }
+        $out .= '</ul>' . "\n";
         $out .= '<div class="sections">' . "\n";
         $out .= $this->documentsBlock($card, $today);
         $out .= $this->profilesBlock($card);
@@ -62,7 +74,9 @@ HTML;
         $out .= $this->grantsBlock($card, $today);
         $out .= '</div>' . "\n";
 
-        $out .= '<h2>What each verifier sees</h2>' . "\n" . $this->viewsTable($card, $today);
+        $out .= '<h2>What Each Verifier Sees</h2>' . "\n";
+        $out .= '<p>' . $this->h('The holder grants each verifier access to named parts of the card for a defined period. Each verifier sees only the fields covered by their grant. The card presents a different view to each verifier. The holder can review which verifier opened each part and when.') . '</p>' . "\n";
+        $out .= $this->viewsTable($card, $today);
 
         return $out . $this->footer();
     }
@@ -114,7 +128,8 @@ HTML;
 
     private function grantsBlock(Card $card, string $today): string
     {
-        $out = '<section class="block"><h3>Access grants</h3><ul>' . "\n";
+        $out = '<section class="block"><h3>' . $this->h('Grant View') . '</h3>' . "\n";
+        $out .= '<p>' . $this->h('Each grant shows the named verifier, accessible card sections and access period.') . '</p>' . "\n" . '<ul>' . "\n";
         foreach ($card->grants as $grant) {
             $live = $grant->isLive($today);
             $state = $grant->revoked ? 'revoked' : ($live ? 'live' : 'expired');

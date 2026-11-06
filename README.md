@@ -1,8 +1,10 @@
-# Indx
+# InDX
 
-A system that ties each person to their accounts elsewhere and carries the proof
-of who they are. A digital card holding personal documents, social profiles, a
-credit score and selective access grants.
+InDX stands for Interstitial Document Extended. It connects a person to their external accounts, documents, contact details, social profiles and financial information through a digital card reached by a short link.
+
+The card stores fingerprints rather than original documents. Identity documents never travel with the card. Holders control published documents and grant named verifiers access to specific sections for defined periods. Each verifier sees only the information covered by their grant. Holders can review access history, including which verifier opened each section and when.
+
+InDX uses plain PHP 8.2, requires no dependencies or database server, and runs on nginx with routing adapted from Apache rewrite rules.
 
 ## What the card holds
 
