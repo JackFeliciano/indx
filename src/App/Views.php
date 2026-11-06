@@ -55,7 +55,7 @@ HTML;
             . ' · born ' . $this->h($card->identity->bornOn)
             . ' · ' . $card->identity->age($today) . ' years old</p>' . "\n";
 
-        $out .= '<h2>Six Parts of the Card</h2>' . "\n" . '<ul class="parts">' . "\n";
+        $out .= '<h2>Six Parts of the Card</h2>' . "\n" . '<div class="parts">' . "\n";
         foreach ([
             ['Verified photograph', 'A verified photograph establishes the holder\'s appearance.'],
             ['Personal documents', 'Holder-selected documents remain available for download through the card.'],
@@ -64,9 +64,10 @@ HTML;
             ['Financial information', 'Credit score with source and reading date, plus bank coordinates supported by proof of funds.'],
             ['Access grants', 'Named permissions give specific verifiers access to defined card sections for a limited period.'],
         ] as [$partName, $partLine]) {
-            $out .= '<li><strong>' . $this->h($partName) . '</strong> ' . $this->h($partLine) . '</li>' . "\n";
+            $out .= '<article class="part"><h3>' . $this->h($partName) . '</h3>'
+                . '<p>' . $this->h($partLine) . '</p></article>' . "\n";
         }
-        $out .= '</ul>' . "\n";
+        $out .= '</div>' . "\n";
         $out .= '<div class="sections">' . "\n";
         $out .= $this->documentsBlock($card, $today);
         $out .= $this->profilesBlock($card);

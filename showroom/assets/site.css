@@ -64,3 +64,9 @@ a { color: var(--mark); }
 .holder { color: #5a5a5a; }
 .stale, .expired, .revoked { color: #6b1d1d; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .live { color: #2f5d3a; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* The six parts of the card, as a grid of cards */
+.parts { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin: 1rem 0 1.6rem; }
+.part { border: 1px solid var(--rule); border-top: 3px solid var(--mark); background: #fff; padding: 1rem 1.05rem 0.9rem; }
+.part h3 { margin: 0 0 0.45rem; font-family: Georgia, serif; font-size: 1.02rem; font-weight: normal; color: var(--ink); }
+.part p { margin: 0; font-size: 0.9rem; color: #4a4a4a; line-height: 1.5; }
