@@ -55,17 +55,13 @@ HTML;
             . ' · born ' . $this->h($card->identity->bornOn)
             . ' · ' . $card->identity->age($today) . ' years old</p>' . "\n";
 
-        $out .= '<h2>Six Parts of the Card</h2>' . "\n" . '<div class="parts">' . "\n";
-        foreach ([
-            ['Verified photograph', 'A verified photograph establishes the holder\'s appearance.'],
-            ['Personal documents', 'Holder-selected documents remain available for download through the card.'],
-            ['Validated contacts', 'Verified email, telephone and postal address, supported by proof of address.'],
-            ['Social profiles', 'A list of social profiles and external links, like a link page.'],
-            ['Financial information', 'Credit score with source and reading date, plus bank coordinates supported by proof of funds.'],
-            ['Access grants', 'Named permissions give specific verifiers access to defined card sections for a limited period.'],
-        ] as [$partName, $partLine]) {
+        $out .= '<h2>Six Parts of the Card</h2>' . "\n";
+        $out .= '<p class="holder">' . $this->h('Every part below carries the sample holder\'s own values, so a reader sees what a verifier would read.') . '</p>' . "\n";
+        $out .= '<div class="parts">' . "\n";
+        foreach ($this->parts($card, $today) as [$partName, $partValue, $partNote]) {
             $out .= '<article class="part"><h3>' . $this->h($partName) . '</h3>'
-                . '<p>' . $this->h($partLine) . '</p></article>' . "\n";
+                . '<p class="value">' . $partValue . '</p>'
+                . '<p class="note">' . $this->h($partNote) . '</p></article>' . "\n";
         }
         $out .= '</div>' . "\n";
         $out .= '<div class="sections">' . "\n";
@@ -80,6 +76,85 @@ HTML;
         $out .= $this->viewsTable($card, $today);
 
         return $out . $this->footer();
+    }
+
+    /**
+     * The six parts with the sample holder's own values. A part with no value on
+     * the card says so, because a blank line would read as a fault.
+     *
+     * @return list<array{0: string, 1: string, 2: string}>
+     */
+    private function parts(Card $card, string $today): array
+    {
+        $identity = $card->identity;
+
+        $photo = '<img class="portrait" src="assets/holder.jpg" alt="Verified photograph of ' . $this->h($identity->name) . '" width="480" height="600">';
+        $photoValue = $identity->photoPath === null ? '<span class="missing">no photograph</span>' : $photo;
+        $photoNote = 'Checked against the passport on 2026-04-18 by Borderless Bank.';
+
+        $documents = [];
+        foreach ($card->documents as $document) {
+            $line = '<li><strong>' . $this->h($document->kind) . '</strong> '
+                . $this->h($document->issuer)
+                . ($document->expiresOn !== null ? ', valid to ' . $this->h($document->expiresOn) : '');
+            if ($document->isExpired($today)) {
+                $line .= ' <span class="expired">expired</span>';
+            }
+            $documents[] = $line . '</li>';
+        }
+        $documentsValue = '<ul class="tight">' . implode('', $documents) . '</ul>';
+        $documentsNote = 'Three documents registered. The card stores a fingerprint of each, and the document stays with its issuer.';
+
+        $contacts = '<ul class="tight">'
+            . '<li><strong>email</strong> holder@example.org <span class="live">verified</span></li>'
+            . '<li><strong>telephone</strong> +351 900 000 000 <span class="live">verified</span></li>'
+            . '<li><strong>address</strong> Rua do Exemplo 12, Lisbon <span class="live">proof of address, 2026-10-02</span></li>'
+            . '</ul>';
+        $contactsNote = 'Each contact carries the check that cleared it, not the document behind the check.';
+
+        $profiles = [];
+        foreach ($card->profiles as $profile) {
+            $profiles[] = '<li><strong>' . $this->h($profile->network) . '</strong> <a href="'
+                . $this->h($profile->url) . '" rel="noopener">' . $this->h($profile->handle) . '</a></li>';
+        }
+        $profilesValue = '<ul class="tight">' . implode('', $profiles) . '</ul>';
+        $profilesNote = 'The card holds no password and no token, so a leaked card opens no account.';
+
+        $score = $card->score;
+        $financeValue = $score === null
+            ? '<span class="missing">no score on this card</span>'
+            : '<p class="figure">' . $score->value . '<span class="scale"> of ' . $score->scale . '</span></p>'
+                . '<p class="note">' . $this->h($score->bureau) . ' on ' . $this->h($score->asOf)
+                . ', band ' . $this->h($score->band()) . ($score->isStale($today) ? ' <span class="stale">older than ninety days</span>' : '') . '</p>'
+                . '<p class="note">IBAN PT50 0000 0000 0000 0000 0000 0, held with Borderless Bank, proof of funds 2026-10-20.</p>';
+        $financeNote = 'The bureau and the date travel with the number, so nobody reads it as a score the card computed.';
+
+        $live = 0;
+        $total = count($card->grants);
+        foreach ($card->grants as $grant) {
+            if ($grant->isLive($today)) {
+                $live++;
+            }
+        }
+        $grantsValue = '<p class="figure">' . $live . '<span class="scale"> of ' . $total . ' live</span></p>'
+            . '<ul class="tight">';
+        foreach ($card->grants as $grant) {
+            $state = $grant->revoked ? 'revoked' : ($grant->isLive($today) ? 'live' : 'expired');
+            $grantsValue .= '<li><strong>' . $this->h($grant->verifier) . '</strong> reads '
+                . $this->h($grant->field) . ' to ' . $this->h($grant->expiresOn)
+                . ' <span class="' . $state . '">' . $state . '</span></li>';
+        }
+        $grantsValue .= '</ul>';
+        $grantsNote = 'The holder revokes a grant at any time, and the part disappears from that verifier\'s view.';
+
+        return [
+            ['Verified photograph', $photoValue, $photoNote],
+            ['Personal documents', $documentsValue, $documentsNote],
+            ['Validated contacts', $contacts, $contactsNote],
+            ['Social profiles', $profilesValue, $profilesNote],
+            ['Financial information', $financeValue, $financeNote],
+            ['Access grants', $grantsValue, $grantsNote],
+        ];
     }
 
     private function documentsBlock(Card $card, string $today): string

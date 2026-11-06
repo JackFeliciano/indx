@@ -70,3 +70,13 @@ a { color: var(--mark); }
 .part { border: 1px solid var(--rule); border-top: 3px solid var(--mark); background: #fff; padding: 1rem 1.05rem 0.9rem; }
 .part h3 { margin: 0 0 0.45rem; font-family: Georgia, serif; font-size: 1.02rem; font-weight: normal; color: var(--ink); }
 .part p { margin: 0; font-size: 0.9rem; color: #4a4a4a; line-height: 1.5; }
+
+/* A part carries the sample holder's value, so the value leads the note */
+.part .value { margin: 0 0 0.55rem; font-size: 0.92rem; color: var(--ink); }
+.part .value ul.tight { margin: 0; padding-left: 0.9rem; font-size: 0.86rem; line-height: 1.45; }
+.part .value ul.tight li { margin: 0.15rem 0; }
+.part .note { margin: 0; font-size: 0.78rem; color: #6b6b6b; line-height: 1.45; }
+.figure { margin: 0 0 0.2rem; font-family: Georgia, serif; font-size: 1.7rem; color: var(--mark); line-height: 1.1; }
+.figure .scale { font-size: 0.8rem; color: #6b6b6b; letter-spacing: 0.02em; }
+img.portrait { display: block; width: 6.5rem; height: 8.1rem; object-fit: cover; border: 1px solid var(--rule); margin: 0 0 0.5rem; filter: grayscale(1); }
+.missing { color: #6b1d1d; font-size: 0.86rem; font-style: italic; }

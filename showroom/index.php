@@ -15,10 +15,11 @@ $prefix = rtrim($base, '/');
 if ($prefix !== '' && str_starts_with($path, $prefix)) {
     $path = substr($path, strlen($prefix));
 }
-if ($path === '/assets/site.css') {
-    header('Content-Type: text/css; charset=utf-8');
+if (preg_match('#^/assets/(site\.css|holder\.jpg)$#', $path, $asset) === 1) {
+    $types = ['site.css' => 'text/css; charset=utf-8', 'holder.jpg' => 'image/jpeg'];
+    header('Content-Type: ' . $types[$asset[1]]);
     header('Cache-Control: public, max-age=300');
-    echo file_get_contents(__DIR__ . '/assets/site.css');
+    readfile(__DIR__ . '/assets/' . $asset[1]);
 
     return;
 }

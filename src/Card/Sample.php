@@ -21,6 +21,7 @@ final class Sample
         $profiles = [
             new Profile('github', 'sample-holder', 'https://github.com/sample-holder'),
             new Profile('linkedin', 'sample-holder', 'https://www.linkedin.com/in/sample-holder'),
+            new Profile('personal site', 'sample-holder', 'https://example.org/sample-holder'),
         ];
         $grants = [
             new Grant('Borderless Bank', 'name', '2027-01-31'),
@@ -31,7 +32,7 @@ final class Sample
         ];
 
         return new Card(
-            identity: new Identity('sample-holder', 'Sample Holder', null, '1984-03-27'),
+            identity: new Identity('sample-holder', 'Sample Holder', 'assets/holder.jpg', '1984-03-27'),
             documents: $documents,
             profiles: $profiles,
             grants: $grants,
