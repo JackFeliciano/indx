@@ -1,0 +1,66 @@
+/* One stylesheet, no framework. The mark colour is crimson. */
+:root {
+    --mark: #880000;
+    --ink: #1c1c1c;
+    --rule: #d8d2c8;
+    --paper: #fdfcfa;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 2.5rem 1.25rem 4rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+main { max-width: 62rem; margin: 0 auto; }
+
+h1, h2 {
+    font-family: Georgia, serif;
+    font-weight: normal;
+    color: var(--mark);
+    letter-spacing: 0.01em;
+}
+
+h1 { font-size: 1.9rem; margin: 0 0 0.25rem; }
+h2 { font-size: 1.2rem; margin: 2.2rem 0 0.6rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; }
+
+p { margin: 0.6rem 0; }
+.stage { color: #5a5a5a; font-size: 0.95rem; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 0.4rem 0 1rem; }
+th, td { text-align: left; padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--rule); }
+thead th { color: var(--mark); font-weight: normal; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.08em; }
+tbody th { font-weight: normal; color: var(--ink); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:hover { background: #f6f2ec; }
+
+ul { padding-left: 1.1rem; }
+ul.gaps li { color: #6b1d1d; }
+.ok { color: #2f5d3a; }
+
+pre { white-space: pre-wrap; font-family: inherit; background: #f6f2ec; padding: 1rem; border-left: 3px solid var(--mark); }
+
+a { color: var(--mark); }
+
+@media (max-width: 40rem) {
+    body { padding: 1.5rem 0.75rem 3rem; }
+    table { font-size: 0.82rem; }
+}
+
+/* The card blocks */
+.sections { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin: 1rem 0; }
+.block { border: 1px solid var(--rule); padding: 0.9rem 1rem; background: #fff; }
+.block h3 { margin: 0 0 0.5rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mark); font-weight: normal; }
+.block ul { margin: 0; padding-left: 1rem; font-size: 0.9rem; }
+.block li { margin: 0.2rem 0; }
+.note { font-size: 0.82rem; color: #666; margin: 0.6rem 0 0; }
+.fingerprint { display: block; font-family: Consolas, monospace; font-size: 0.72rem; color: #8a8a8a; }
+.holder { color: #5a5a5a; }
+.stale, .expired, .revoked { color: #6b1d1d; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.live { color: #2f5d3a; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
